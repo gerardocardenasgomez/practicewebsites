@@ -48,13 +48,22 @@ def generate_graph():
         temps.append(parsed['main']['temp_max'])
            
     y_pos = np.arange(len(cities))
-    
-    plt.bar(y_pos, temps, align='center', alpha=0.5)
-    plt.xticks(y_pos, cities)
-    plt.ylabel('Temperatures (in F)')
-    plt.title('Temperatures across different cities.')
+
+    width = 0.35
+
+    fig, ax = plt.subplots()
+
+    rects = ax.bar(y_pos, temps, width, color='r')
+    ax.set_ylabel('Temperatures')
+    ax.set_title('Temperatures Across Different Cities')
+    ax.set_xticks(y_pos + width / 24)
+    ax.set_xticklabels(cities)
+
+    for rect in rects:
+        height = rect.get_height()
+        ax.text(rect.get_x() + rect.get_width()/2., 1.0*height, '%d' % int(height), ha='center', va='bottom')
 
     plt.savefig(weather_file)
 
-#print get_weather('london')
+print get_weather('austin')
 generate_graph()
