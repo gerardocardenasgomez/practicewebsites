@@ -1,1 +1,71 @@
-/usr/local/openresty/nginx/html/vue.html
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to OpenResty!</title>
+<!-- Latest compiled and minified CSS -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<h1>Welcome to my website!</h1>
+
+<div class="container-fluid">
+  <div class="row">
+    <div id="welcome">
+        <h1>{{ welcome_message }}</h2>
+    </div>
+
+    <div id="news" class="col-sm-9 col-md-6 col-lg-12">
+        <ul>
+            <li v-for="items in headline_results">
+                <a v-bind:href="items.link"> {{ items.title }} </a>
+                | {{ items.summary }}
+            </li>
+        </ul>
+
+        <button v-on:click="reloadNews">Reload the news!</button> <input v-model="publication_name" placeholder="Type in a different publication">
+    </div>
+  </div>
+</div>
+
+</body>
+    <script src='https://vuejs.org/js/vue.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+
+    <script>
+        new Vue ({
+            el: '#welcome',
+            data: {
+                welcome_message: "Headlines"
+            }
+        })
+
+        new Vue({
+            el: '#news',
+            data: {
+                headline_results: {},
+                publication_name: 'cnn'
+            },
+            methods: {
+                getNews: function () {
+                        this.$http.get('http://api.learningunix.org/news/bbc', {"params": {"publication" : this.publication_name}}).then(response => {
+                        this.headline_results = response.body;
+                    }, response => {
+                        this.headline_results = 'None';
+                    });
+                },
+                reloadNews: function () {
+                    this.getNews();
+                }
+            },
+            beforeMount() {
+                this.getNews();
+            }
+        })
+
+    </script>
+
+</html>
