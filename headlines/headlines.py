@@ -2,6 +2,13 @@ from flask import Flask
 import json
 import feedparser
 from flask import request
+import ConfigParser
+
+# Get our configs
+config = ConfigParser.RawConfigParser()
+config.read('.env')
+
+WEATHER_API_KEY = config.get("api_keys", "WEATHER_API_KEY")
 
 app = Flask(__name__)
 
