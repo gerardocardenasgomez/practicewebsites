@@ -1,5 +1,7 @@
 from flask import Flask
 import json
+import feedparser
+from flask import request
 
 app = Flask(__name__)
 
@@ -11,10 +13,19 @@ def get_root():
 @app.route("/news/<publication>")
 def get_news(publication=None):
     stories = []
-    stories.append({'headline':'Bobcats attack local nursery, leave gore in their wake.'})
-    stories.append({'headline':'White House runs out of plastic cutlery.'})
-    stories.append({'headline':'NASCAR canceled for reruns of House.'})
-    stories.append({'headline':'NASA discovery leads to finding more than $5 worth of coins under employee desks.'})
+
+    BBC_URL = 'http://feeds.bbci.co.uk/news/rss.xml'
+    feed = feedparser.parse(BBC_URL)
+
+    query = request.args.get("publication")
+    print query
+
+    for story_index in range(0,10):
+        story = {}
+        story['summary'] = feed['entries'][story_index].summary_detail.value
+        story['title'] = feed['entries'][story_index].title
+        story['link'] = feed['entries'][story_index].link
+        stories.append(story)
 
     return json.dumps(stories)
 
