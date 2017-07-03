@@ -3,6 +3,7 @@ import json
 import feedparser
 from flask import request
 import ConfigParser
+import weather_gen
 
 # Get our configs
 config = ConfigParser.RawConfigParser()
@@ -35,6 +36,16 @@ def get_news(publication=None):
         stories.append(story)
 
     return json.dumps(stories)
+
+@app.route("/weather", methods=['GET'])
+def get_weather(city=None):
+    city = request.args.get('city')
+    if not city:
+        return "{'error':'City not provided'}", 400
+    else:
+        weather_gen.get_weather(city)
+        weather_gen.generate_graph()
+        return 'OK', 200
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

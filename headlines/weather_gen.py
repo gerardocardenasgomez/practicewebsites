@@ -4,11 +4,15 @@ import json
 import urllib
 import urllib2
 import re
+import matplotlib
+# Force matplotlib to not use any Xwindows backend.
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt; plt.rcdefaults()
 import numpy as np
 import matplotlib.pyplot as plt
 import ConfigParser
 
+plt.ioff()
 # Get our configs
 config = ConfigParser.ConfigParser()
 config.read('.env')
@@ -17,9 +21,10 @@ WEATHER_API_KEY = config.get("api_keys", "WEATHER_API_KEY")
 api_url = config.get('urls','api_url')
 redis_host = config.get('redis','host')
 redis_port = config.get('redis','port')
+redis_db = config.get('redis', 'db')
 weather_file = config.get('files','weather_file')
 
-r = redis.Redis(host=redis_host, port=int(redis_port), db=0)
+r = redis.Redis(host=redis_host, port=int(redis_port), db=int(redis_db))
 
 
 def store_weather(weather_data):
@@ -64,6 +69,3 @@ def generate_graph():
         ax.text(rect.get_x() + rect.get_width()/2., 1.0*height, '%d' % int(height), ha='center', va='bottom')
 
     plt.savefig(weather_file)
-
-print get_weather('austin')
-generate_graph()

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to OpenResty!</title>
+<!-- Latest compiled and minified CSS -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<h1>Welcome to my website!</h1>
+
+<div class="container-fluid">
+  <div class="row">
+
+  <div class="row">
+    <div id="weather" class="col-sm-9 col-md-6 col-lg-12">
+        {{ testing_var }}
+        <br />
+        <br />
+        <b></b>
+        <img v-bind:src="weather_src"/>
+
+        <button v-on:click="getGraph">Reload Graph</button>
+    </div>
+
+  </div>
+</div>
+
+</body>
+    <script src='https://vuejs.org/js/vue.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+
+    <script>
+
+        new Vue ({
+            el: '#weather',
+            data: {
+                weather_src: "weather_data.png",
+                city: '',
+                img_url: 'https://api.learningunix.org/weather?city=',
+                testing_var: 0
+            },
+            methods: {
+                getGraph: function () {
+                    this.testing_var += 1;
+                    this.$forceUpdate();
+                }
+            }
+        })
+
+    </script>
+
+</html>
