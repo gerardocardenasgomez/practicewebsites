@@ -17,13 +17,18 @@
 
   <div class="row">
     <div id="weather" class="col-sm-9 col-md-6 col-lg-12">
-        {{ testing_var }}
         <br />
-        <br />
-        <b></b>
-        <img v-bind:src="weather_src"/>
 
-        <button v-on:click="getGraph">Reload Graph</button>
+        <img src="weather_data.png" id="dynamicImage" />
+        <button @click='updateImage()'>Refresh Image</button>
+
+        <br />
+
+        <input v-model="city" placeholder="Add a new city">
+        <button @click="insertCity()">Submit</button>
+
+        <p>{{ result }}</p>
+
     </div>
 
   </div>
@@ -38,15 +43,21 @@
         new Vue ({
             el: '#weather',
             data: {
-                weather_src: "weather_data.png",
                 city: '',
                 img_url: 'https://api.learningunix.org/weather?city=',
-                testing_var: 0
+                result: '',
             },
             methods: {
-                getGraph: function () {
-                    this.testing_var += 1;
-                    this.$forceUpdate();
+                insertCity: function () {
+                    this.$http.get('http://api.learningunix.org/weather?city=' + this.city).then(response => {
+                        this.updateImage();
+                        this.result = 'City Added!';
+                    }, response => {
+                        this.result = response.body;
+                    });
+                },
+                updateImage: function () {
+                    $("#dynamicImage").prop("src", "weather_data.png?" + new Date().valueOf());
                 }
             }
         })

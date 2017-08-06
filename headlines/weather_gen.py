@@ -36,7 +36,7 @@ def get_weather(city):
     url = api_url.format(query)
     results = urllib2.urlopen(url).read()
     
-    weather_data = {query: results}
+    weather_data = {query.replace('%20', ' '): results}
 
     store_weather(weather_data)
 
@@ -51,12 +51,17 @@ def generate_graph():
         result = r.get(key)
         parsed = json.loads(result)
         temps.append(parsed['main']['temp_max'])
-           
+
     y_pos = np.arange(len(cities))
 
     width = 0.35
 
     fig, ax = plt.subplots()
+
+    g_height = 5.5
+    g_length = 1.5 * len(cities)
+
+    fig.set_size_inches(g_length, g_height)
 
     rects = ax.bar(y_pos, temps, width, color='r')
     ax.set_ylabel('Temperatures')
@@ -69,3 +74,6 @@ def generate_graph():
         ax.text(rect.get_x() + rect.get_width()/2., 1.0*height, '%d' % int(height), ha='center', va='bottom')
 
     plt.savefig(weather_file)
+
+if __name__ == "__main__":
+    generate_graph()
